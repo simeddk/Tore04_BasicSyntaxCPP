@@ -19,13 +19,16 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
-	UPROPERTY(VisibleAnywhere)
+	UFUNCTION()
+	virtual void OnBoxBeginOverlap(AActor* OverlappedActor, AActor* OtherdActor);
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	USceneComponent* RootComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UBoxComponent* BoxComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UTextRenderComponent* TextRenderComp;
-
 };

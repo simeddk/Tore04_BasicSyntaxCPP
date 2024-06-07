@@ -4,7 +4,6 @@
 
 ACBoxBase::ACBoxBase()
 {
-	//Todo. Collision Dynamic Delegate(C++ DELEGATE)
 	RootComp = CreateDefaultSubobject<USceneComponent>("RootComp");
 	RootComponent = RootComp;
 
@@ -26,4 +25,10 @@ void ACBoxBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	OnActorBeginOverlap.AddDynamic(this, &ACBoxBase::OnBoxBeginOverlap);
+}
+
+void ACBoxBase::OnBoxBeginOverlap(AActor* OverlappedActor, AActor* OtherdActor)
+{
+
 }

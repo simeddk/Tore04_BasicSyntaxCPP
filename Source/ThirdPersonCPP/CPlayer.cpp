@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "CAnimInstance.h"
+#include "Assignment/CBoxBase_Chest.h"
 
 ACPlayer::ACPlayer()
 {
@@ -42,6 +43,8 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	OnActorBeginOverlap.AddDynamic(this, &ACPlayer::BeginOverlap);
+	OnActorEndOverlap.AddDynamic(this, &ACPlayer::EndOverlap);
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,6 +58,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayer::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayer::OffSprint);
+	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ACPlayer::OnInteract);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -83,3 +87,34 @@ void ACPlayer::OffSprint()
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 }
 
+void ACPlayer::OnInteract()
+{
+	if (InteractableActor)
+	{
+		FName Key;
+		InteractableActor->Open(Key);
+
+		HasKeys.AddUnique(Key);
+
+		if (OnGotKey.IsBound())
+		{
+			OnGotKey.Broadcast();
+		}
+	}
+
+}
+
+void ACPlayer::BeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	InteractableActor = Cast<ACBoxBase_Chest>(OtherActor);
+}
+
+void ACPlayer::EndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	InteractableActor = nullptr;
+}
+
+const TArray<FName>& ACPlayer::GetHasKeys()
+{
+	return HasKeys;
+}
