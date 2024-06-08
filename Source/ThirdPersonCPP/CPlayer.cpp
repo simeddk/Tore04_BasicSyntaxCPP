@@ -43,6 +43,7 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//@ Binding to Capsule Collision Overlap Event
 	OnActorBeginOverlap.AddDynamic(this, &ACPlayer::BeginOverlap);
 	OnActorEndOverlap.AddDynamic(this, &ACPlayer::EndOverlap);
 }
@@ -58,6 +59,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayer::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayer::OffSprint);
+
+	//@ Binding 'F' Key Action Event
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ACPlayer::OnInteract);
 }
 
@@ -89,13 +92,17 @@ void ACPlayer::OffSprint()
 
 void ACPlayer::OnInteract()
 {
+	//@ If exist overlapping Actors in Capsule Collision
 	if (InteractableActor)
 	{
+		//@ The key held by the InteractableActor is returned via Call By Reference.
 		FName Key;
 		InteractableActor->Open(Key);
 
+		//@ Register the key obtained in this way in the list.
 		HasKeys.AddUnique(Key);
 
+		//@ If there is a bound event, it is executed. Here we bound it to a widget.
 		if (OnGotKey.IsBound())
 		{
 			OnGotKey.Broadcast();
@@ -104,16 +111,19 @@ void ACPlayer::OnInteract()
 
 }
 
+//@ Check whether Overlapped Actor are derived from BoxBased, and save if correct.
 void ACPlayer::BeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
 	InteractableActor = Cast<ACBoxBase_Chest>(OtherActor);
 }
 
+//@ When EndOverlap occurs, the variable is emptied.
 void ACPlayer::EndOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
 	InteractableActor = nullptr;
 }
 
+//@ Returns the HasKeys below to the outside.
 const TArray<FName>& ACPlayer::GetHasKeys()
 {
 	return HasKeys;

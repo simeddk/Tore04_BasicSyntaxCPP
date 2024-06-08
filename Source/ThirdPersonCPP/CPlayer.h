@@ -18,6 +18,7 @@ class THIRDPERSONCPP_API ACPlayer : public ACharacter
 public:
 	ACPlayer();
 
+	//@ A getter that returns the HasKeys below to the outside.
 	const TArray<FName>& GetHasKeys();
 
 protected:
@@ -31,8 +32,10 @@ private:
 	void OnSprint();
 	void OffSprint();
 
+	//@ 'F' Key Action Event, Binding by SetupPlayerInputComponent fuction.
 	void OnInteract();
 
+	//@ Capsule Collision Event
 private:
 	UFUNCTION()
 	void BeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
@@ -40,6 +43,7 @@ private:
 	UFUNCTION()
 	void EndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
+	//@ I want to do something when the actual interaction occurs. Here, we want to display the status of keys currently owned by the player using a widget.
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnGotKey OnGotKey;
@@ -51,10 +55,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	//@ List of keys obtained by opening boxes.
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FName> HasKeys;
 
+	//@ BoxBased Actor overlapping with capsule collision
 private:
 	ACBoxBase_Chest* InteractableActor;
 };

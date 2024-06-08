@@ -10,7 +10,7 @@ ACBoxBase::ACBoxBase()
 	BoxComp = CreateDefaultSubobject<UBoxComponent>("BoxComp");
 	BoxComp->SetupAttachment(RootComp);
 	BoxComp->SetWorldScale3D(FVector(3));
-	BoxComp->bHiddenInGame = false;
+	BoxComp->bHiddenInGame = true;
 
 	TextRenderComp = CreateDefaultSubobject<UTextRenderComponent>("TextRenderComp");
 	TextRenderComp->SetupAttachment(RootComp);
@@ -19,6 +19,7 @@ ACBoxBase::ACBoxBase()
 	TextRenderComp->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	TextRenderComp->TextRenderColor = FColor::Black;
 	TextRenderComp->SetText(GetName());
+	TextRenderComp->bHiddenInGame = true;
 }
 
 void ACBoxBase::BeginPlay()

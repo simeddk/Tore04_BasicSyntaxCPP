@@ -1,11 +1,13 @@
 #include "CBoxBase_Chest.h"
 #include "Global.h"
+#include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 ACBoxBase_Chest::ACBoxBase_Chest()
 {
+	//@ Basic object assignment and property granting
 	Emissive = FLinearColor(10, 0, 0);
 
 	Lid = CreateDefaultSubobject<UStaticMeshComponent>("Lid");
@@ -34,6 +36,7 @@ void ACBoxBase_Chest::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
+	//@ Create Dynamic Material and set to MeshComp
 	UMaterialInstanceConstant* MaterialAsset = Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, TEXT("/Game/Assignment/Chest/MI_Chest")));
 	if (MaterialAsset)
 	{
@@ -47,11 +50,28 @@ void ACBoxBase_Chest::OnConstruction(const FTransform& Transform)
 
 void ACBoxBase_Chest::Open(FName& OutKey)
 {
+	//@ The lid will pop open without an animation effect.
 	if (bAlreadyOpened == false)
 	{
 		bAlreadyOpened = true;
 		Lid->SetRelativeRotation(FRotator(110, 0, 0));
 
 		OutKey = Key;
+
+		Open();
 	}
+}
+
+void ACBoxBase_Chest::OnBoxBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	//@ Displays information that you must press f to open this chest.
+	Super::OnBoxBeginOverlap(OverlappedActor, OtherActor);
+
+	if (bAlreadyOpened)
+	{
+		return;
+	}
+
+	FString message = "Press F key to open";
+	DrawDebugString(GetWorld(), FVector(0, 0, 50), message, this, FColor::White, 2, true, 1.25f);
 }
