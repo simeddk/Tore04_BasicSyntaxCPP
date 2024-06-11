@@ -42,7 +42,7 @@ void ACPointLights::BeginPlay()
 			trigger->OnBoxBeginOverlap.BindUFunction(this, "OnLights");
 			trigger->OnBoxEndOverlap.BindUFunction(this, "OffLights");
 
-			trigger->OnBoxOneParam.BindUFunction(this, "OnRandomLight");
+			trigger->OnBoxOneParam.BindUObject(this, &ACPointLights::OnRandomLight);
 		}
 	}
 }
