@@ -11,5 +11,4 @@ class THIRDPERSONCPP_API AThirdPersonCPPGameModeBase : public AGameModeBase
 
 public:
 	AThirdPersonCPPGameModeBase();
-	
 };
