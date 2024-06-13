@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "CAnimInstance.h"
+#include "CWeapon.h"
 
 ACPlayer::ACPlayer()
 {
@@ -53,6 +54,12 @@ void ACPlayer::BeginPlay()
 
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
+
+	FActorSpawnParameters SpawnParam;
+	SpawnParam.Owner = this;
+	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	//Todo. BP Class Ref
+	Weapon = GetWorld()->SpawnActor<ACWeapon>(SpawnParam);
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -66,6 +73,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayer::OnSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayer::OffSprint);
+
+	PlayerInputComponent->BindAction("Rifle", EInputEvent::IE_Pressed, this, &ACPlayer::ToggleEquip);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -92,6 +101,20 @@ void ACPlayer::OnSprint()
 void ACPlayer::OffSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+}
+
+void ACPlayer::ToggleEquip()
+{
+	if (Weapon == nullptr) return;
+
+	if (Weapon->IsEquipped())
+	{
+		Weapon->Unequip();
+		return;
+	}
+
+	Weapon->Equip();
+	
 }
 
 void ACPlayer::SetBodyColor(FLinearColor InBodyColor, FLinearColor InLogoColor)
