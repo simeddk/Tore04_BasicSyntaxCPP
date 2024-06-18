@@ -23,6 +23,9 @@ public:
 	void ChangeSpeed(float InMoveSpeed = 400.f);
 
 	FORCEINLINE ACWeapon* GetWeapon() override { return Weapon; }
+	virtual void GetAimInfo(FVector& OutAimStart, FVector& OutAimEnd, FVector& OutAimDirection) override;
+	virtual void OnTarget() override;
+	virtual void OffTarget() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,6 +42,9 @@ private:
 
 	void OnAim();
 	void OffAim();
+
+	void OnFire();
+	void OffFire();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -71,4 +77,6 @@ private:
 
 	ACWeapon* Weapon;
 	UCCrossHairWidget* CrossHairWidget;
+
+	
 };
