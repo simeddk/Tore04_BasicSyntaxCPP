@@ -10,6 +10,7 @@ class UCameraComponent;
 class UMaterialInstanceDynamic;
 class ACWeapon;
 class UCCrossHairWidget;
+class UCWeaponWidget;
 
 UCLASS()
 class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICWeaponInterface
@@ -46,6 +47,8 @@ private:
 	void OnFire();
 	void OffFire();
 
+	void OnAutoFire();
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetBodyColor(FLinearColor InBodyColor, FLinearColor InLogoColor);
@@ -71,12 +74,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UCCrossHairWidget> CrossHairWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UCWeaponWidget> WeaponWidgetClass;
+
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
 
 	ACWeapon* Weapon;
-	UCCrossHairWidget* CrossHairWidget;
-
 	
+	UCCrossHairWidget* CrossHairWidget;
+	UCWeaponWidget* WeaponWidget;
 };

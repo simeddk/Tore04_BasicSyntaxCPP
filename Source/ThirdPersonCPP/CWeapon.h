@@ -7,6 +7,10 @@
 class USkeletalMeshComponent;
 class ACharacter;
 class UAnimMontage;
+class ACBullet;
+class UParticleSystem;
+class USoundCue;
+class UMaterialInstanceConstant;
 
 UCLASS()
 class THIRDPERSONCPP_API ACWeapon : public AActor
@@ -27,6 +31,10 @@ public:
 	FORCEINLINE bool IsEquipping() { return bEquipping; }
 	FORCEINLINE bool IsAiming() { return bAiming; }
 	FORCEINLINE USkeletalMeshComponent* GetMesh() { return MeshComp; }
+	
+	FORCEINLINE bool IsFiring() { return bFiring; }
+	FORCEINLINE bool IsAutoFire() { return bAutoFire; }
+	void ToggleAutoFire();
 
 	void Begin_Aiming();
 	void End_Aiming();
@@ -46,6 +54,15 @@ public:
 	void End_Unequip();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "BulletClass")
+	TSubclassOf<ACBullet> BulletClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AutoFire")
+	float FireInterval;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AutoFire")
+	float PitchSpeed;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 	FName HolsterSocket;
 
@@ -61,6 +78,21 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "CameraShake")
 	TSubclassOf<UCameraShake> CameraShakeClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UParticleSystem* MuzzleParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UParticleSystem* EjectParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UParticleSystem* ImpactParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	USoundCue* FireSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UMaterialInstanceConstant* DecalMaterial;
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 	USkeletalMeshComponent* MeshComp;
@@ -72,4 +104,9 @@ private:
 	bool bEquipping;
 	bool bAiming;
 	bool bFiring;
+	bool bAutoFire;
+
+	float CurrentPitch;
+
+	FTimerHandle AutoTimerHandle;
 };

@@ -21,14 +21,14 @@ ACBullet::ACBullet()
 	}
 
 	MeshComp->SetRelativeScale3D(FVector(1.f, 0.025f, 0.025f));
+	MeshComp->CastShadow = false;
+	SetActorEnableCollision(false);
 
 	ProjectileComp = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileComp");
 	ProjectileComp->InitialSpeed = 2e+4f;
 	ProjectileComp->MaxSpeed = 2e+4f;
 	ProjectileComp->ProjectileGravityScale = 0.f;
-
-	//Todo. 총알은 그림자 있으면 어색함
-	//Todo. 총알의 충돌체 끄기
+	
 }
 
 void ACBullet::BeginPlay()
